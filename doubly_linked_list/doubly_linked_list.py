@@ -7,12 +7,6 @@ class ListNode:
         self.prev = prev
         self.value = value
         self.next = next
-
-    def delete(self):
-        if self.prev:
-            self.prev.next = self.next
-        if self.next:
-            self.next.prev = self.prev
            
 """
 Our doubly-linked list class. It holds references to 
@@ -36,7 +30,7 @@ class DoublyLinkedList:
         new_node = ListNode(value, None, None)
 
         self.length += 1
-        if not self.head and not not self.tail:
+        if not self.head and not self.tail:
             self.head = new_node
             self.tail = new_node
         else:
@@ -96,8 +90,7 @@ class DoublyLinkedList:
         if node is self.tail:
             self.remove_from_tail()
         else:
-            node.delete()
-            self.length -= 1
+            self.delete(node)
 
         self.add_to_head(value)
         
@@ -113,8 +106,7 @@ class DoublyLinkedList:
             self.remove_from_head()
             self.add_to_tail(value)
         else:
-            node.delete()
-            self.length -= 1
+            self.delete(node)
             self.add_to_tail(value)
 
     """
@@ -122,24 +114,25 @@ class DoublyLinkedList:
     order of the other elements of the List.
     """
     def delete(self, node):
-        # if node.prev:
-          #  node.prev.next = node.next
-        # if node.next:
-          #  node.next.prev = node.prev
-        if not self.head and not self.tail:
-            return
-        if self.head is self.tail:
-            self.head = None
-            self.tail = None
-        elif self.head is node:
-            self.head = node.next
-            node.delete()
-        elif self.tail is node:
-            self.tail = node.prev
-            node.delete()
+        if node.prev:
+            node.prev.next = node.next
         else:
-            node.delete()
-        self.length -= 1
+            if node.next:
+                self.head = node.next
+                node.next.prev = None
+            else:
+                self.head = None
+                
+        if node.next:
+            node.next.prev = node.prev
+        else:
+            if node.prev:
+                self.tail = node.prev
+                node.prev.next = None
+            else:
+                self.tail = None
+
+        self.length -= 1        
 
     """
     Finds and returns the maximum value of all the nodes 
